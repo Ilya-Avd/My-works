@@ -1,0 +1,22 @@
+canvas{
+    position: absolute;
+    display: block;
+    margin: 64px 428px;
+}
+div{
+    position: relative;
+    top: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+button{
+    margin: 5px;
+    width: 140px;
+    height: 64px;
+    background-color: brown;
+    color: white;
+    padding: 0;
+    border: none;
+    border-radius: 10%;
+}
