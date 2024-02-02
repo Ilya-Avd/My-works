@@ -1,5 +1,6 @@
 {
-  "compilerOptions": {
-                /* Skip type checking all .d.ts files. */
-  }
+  "compilerOptions": { 
+
+  },
+
 }
