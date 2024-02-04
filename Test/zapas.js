@@ -5,23 +5,21 @@ fetch('https://api.github.com/repos/Ilya-Avd/My-works/contents/Test/data.json') 
     // Декодирование содержимого из base64
     var content = atob(data.content);
     var parsedData = JSON.parse(content).map(function (item) { return ({
-        'Id':item.id,
         'First Name': item.name.firstName,
         'Last Name': item.name.lastName,
         'About': item.about,
         'Eye Color': item.eyeColor
     }); });
     let numberPage=1;//Переменная хранящая номер страницы
-      
+       
     // Создание таблицы HTML
     function CreateTable() {
-        console.log(parsedData[1])
         var table = document.createElement('table');
         table.setAttribute('id', 'taable');
         var thead = document.createElement('thead');
         var tbody = document.createElement('tbody');
         // Создание заголовков таблицы
-        var headers = Object.keys(parsedData[0]).splice(1,4);
+        var headers = Object.keys(parsedData[0]);
         var headerRow = document.createElement('tr');
         headers.forEach(function (headerText) {
             var th = document.createElement('th');
@@ -36,8 +34,6 @@ fetch('https://api.github.com/repos/Ilya-Avd/My-works/contents/Test/data.json') 
         // Заполнение тела таблицы
         parsedData.slice((numberPage-1)*10,numberPage*10).forEach(function (dataItem) {
             var row = document.createElement('tr');
-            row.setAttribute('id', dataItem.Id);
-            row.onclick=formEdit;  //Обработчик для редактирования
             headers.forEach(function (header) {
                 var cell = document.createElement('td');
                 // Цвет глаз устанавливаем фоном
@@ -82,64 +78,7 @@ fetch('https://api.github.com/repos/Ilya-Avd/My-works/contents/Test/data.json') 
     }
     updateTable(); 
     }
-      //Форма редактирования 
-      function formEdit(element){
-        let eEdit=element.currentTarget
-        //Объявление контейнер и форму
-        let form_div=document.createElement('div')
-        form_div.setAttribute("id", "form_div")
-        let newForm=document.createElement('form')
-        //Элементы формы
-        let arrInp=[
-         document.createElement('input'),
-         document.createElement('input'),
-         document.createElement('textarea'),
-         document.createElement('select'),
-        ]
-         buttn=document.createElement('button')
-         buttn.textContent = "Save";
-        //Заполнение данных формы
-        let tdValues = Array.from(eEdit.children).map(td => td.textContent);
-        arrInp.forEach((input, index) => {
-            if (index < tdValues.length) { 
-                input.value = tdValues[index];
-                
-            }
-            newForm.appendChild(input)
-        });
-      
-       
-         
-        //Обработчик отправки изменений
-        buttn.onclick=function(){
-           
-            let inputValues = arrInp.map(input => input.value);
-            
-            parsedData.forEach((tr,index) => {
-                
-                if(tr.Id==eEdit.id){
-                    let key = Object.keys(parsedData[index]).splice(1,3);
-                    key.forEach((rowKey, i) => {
-                        tr[rowKey] = inputValues[i];
-                        
-                    });
-                    
-                }
-                
-                
-            });
-            let dropForm=document.getElementById('form_div')
-            dropForm.remove()
-            updateTable()
-        }
-
-
-        //Добавление 
-
-        newForm.appendChild(buttn)
-        form_div.appendChild(newForm)
-        document.body.appendChild(form_div)
-      }
+    
     
 
 
@@ -202,7 +141,7 @@ fetch('https://api.github.com/repos/Ilya-Avd/My-works/contents/Test/data.json') 
     function Start() {
         CreateTable();
         hideColumn();
-        numRow();        
+        numRow();
     }
     Start();
 });
