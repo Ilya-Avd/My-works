@@ -31,7 +31,7 @@ fetch('https://api.github.com/repos/Ilya-Avd/My-works/contents/Test/data.json')
         const tbody = document.createElement('tbody');
     
         // Создание заголовков таблицы
-        const headers = Object.keys(parsedData[0]);
+        const headers = Object.keys(parsedData[0]).splice(1,4);
         const headerRow = document.createElement('tr');
         headers.forEach(headerText => {
             const th = document.createElement('th');
