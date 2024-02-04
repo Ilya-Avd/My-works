@@ -1,0 +1,74 @@
+$widhTID: 50%;// widh для Table inutDiv И btn_div
+$backColorGrey:#f2f2f2;//Серый фон
+$lineTable:1px solid #dddddd;// Разделение ячеек
+body{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+body table, .inutDiv, .btn_div{
+  margin-bottom: 10px;
+}
+table {
+  order: 2;
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+    width: $widhTID;
+    max-width: $widhTID;
+    top: 0;
+  }
+  th {
+    border: $lineTable;
+    background-color: $backColorGrey;
+  }
+  tbody{
+  th, td {
+    border: $lineTable;
+    text-align: left;
+    padding: 3px;
+  }
+  
+  tr:nth-child(even) {
+    background-color: $backColorGrey;
+  }
+  
+   td.about {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2; /* Обрезаем после 2 строк */
+    overflow: hidden;
+    
+  }
+}
+  .inutDiv{
+    order: 3;
+    width: $widhTID/4;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .btn_div{
+    order: -1;
+
+    margin-left: auto;
+    margin-right: auto;
+    width: $widhTID/2;
+    
+  }
+  #form_div{
+    
+    order: 4;
+    height: 100px;
+    width: $widhTID/2;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  form{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+  }
+  textarea{
+    height: 50px;
+    resize: none;
+  }

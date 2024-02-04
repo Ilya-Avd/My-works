@@ -19,6 +19,7 @@ fetch('https://api.github.com/repos/Ilya-Avd/My-works/contents/Test/data.json')
     }));
 
     let numberPage=1;//Переменная хранящая номер страницы
+    let arrColor=[...new Set(parsedData.map(elData=>elData['Eye Color']))]
 
     // Создание таблицы HTML
     function CreateTable() {
@@ -46,6 +47,8 @@ fetch('https://api.github.com/repos/Ilya-Avd/My-works/contents/Test/data.json')
         // Заполнение тела таблицы
         parsedData.slice((numberPage-1)*10,numberPage*10).forEach(function (dataItem) {
             const row = document.createElement('tr');
+            row.setAttribute('id', dataItem.Id);
+            row.onclick=formEdit;  //Обработчик для редактирования
             headers.forEach(header => {
                
                 const cell = document.createElement('td');
@@ -91,6 +94,96 @@ fetch('https://api.github.com/repos/Ilya-Avd/My-works/contents/Test/data.json')
         }
         updateTable(); 
         }
+              //Форма редактирования 
+      function formEdit(element){
+        
+        let newDrop=document.getElementById('form_div')//Проверка на дубликат
+            if(newDrop){newDrop.remove()}
+        let eEdit=element.currentTarget
+        //Объявление контейнер и форму
+        let form_div=document.createElement('div')
+        form_div.setAttribute("id", "form_div")
+        let newForm=document.createElement('form')
+        //Элементы формы
+        let arrInp=[
+         document.createElement('input'),
+         document.createElement('input'),
+         document.createElement('textarea'),
+         document.createElement('select'),
+         
+        ]
+        
+         
+         let buttn=document.createElement('button')
+         buttn.textContent = "Save";
+        //Заполнение данных формы
+        let tdValues = Array.from(eEdit.children).map(td => td.textContent);
+        arrInp.forEach((input, index) => {
+            if (index < tdValues.length &&tdValues[index]!=='') { 
+                
+                input.value = tdValues[index];
+            }
+            else {arrColor.forEach((color)=>{
+                let option =document.createElement('option')
+            option.style.backgroundColor=color
+            
+            
+            input.appendChild(option)
+            input.setAttribute("id", "inp")
+            })
+            // Смена цвета select
+            input.onchange=function(e){
+                let indexEvent=this.selectedIndex;
+                let option_num=this.options[indexEvent]
+                let colorOp=option_num.style.backgroundColor
+                this.style.backgroundColor=colorOp
+                
+            }
+            input.style.backgroundColor=eEdit.children[index].style.backgroundColor
+        }
+            
+            newForm.appendChild(input)
+        });
+      
+       
+         
+        //Обработчик отправки изменений
+        buttn.onclick=function(){
+           
+            let inputValues = arrInp.map(input => input.value===''? input.value=input.style.backgroundColor : input.value);
+            console.log(inputValues)
+            parsedData.forEach((tr,index) => {
+                
+                if(tr.Id==eEdit.id){
+                    
+                    let key = Object.keys(parsedData[index]).splice(1,4);
+                    
+                    key.forEach((rowKey, i) => {
+                        if(key[i]==='Eye Color'){tr[rowKey]=inputValues[i]}
+                        tr[rowKey] = inputValues[i];
+                        
+                    });
+                    
+                }
+                
+                
+            });
+            let dropForm=document.getElementById('form_div')
+            dropForm.remove()
+            updateTable()
+        }
+
+
+        //Добавление 
+
+        newForm.appendChild(buttn)
+        form_div.appendChild(newForm)
+        document.body.appendChild(form_div)
+      }
+    
+
+      
+
     // Выборка страницы
     function numRow(){
         let inp_div=document.createElement('div')//Создадим контейнер
@@ -132,7 +225,7 @@ fetch('https://api.github.com/repos/Ilya-Avd/My-works/contents/Test/data.json')
         let btn_div=document.createElement('div');   //Создаем контейнер для кнопок
         
         // Создаем кнопки
-        const headers_btn = Object.keys(parsedData[0]);
+        const headers_btn = Object.keys(parsedData[0]).splice(1,4);
         headers_btn.forEach(heade_Text=>{
             let btn=document.createElement('button');
             btn.innerText=heade_Text.toLowerCase().replace(/\s/g, '-');
