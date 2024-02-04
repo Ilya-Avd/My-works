@@ -18,8 +18,9 @@ fetch('https://api.github.com/repos/Ilya-Avd/My-works/contents/Test/data.json')
         'Eye Color': item.eyeColor
     }));
 
-    let numberPage=1;//Переменная хранящая номер страницы
-    let arrColor=[...new Set(parsedData.map(elData=>elData['Eye Color']))]
+    let numberPage:number=1;//Переменная хранящая номер страницы
+    let arrColor = Array.from(new Set(parsedData.map(elData => elData['Eye Color'])));
+
 
     // Создание таблицы HTML
     function CreateTable() {
@@ -117,7 +118,9 @@ fetch('https://api.github.com/repos/Ilya-Avd/My-works/contents/Test/data.json')
          let buttn=document.createElement('button')
          buttn.textContent = "Save";
         //Заполнение данных формы
-        let tdValues = Array.from(eEdit.children).map(td => td.textContent);
+        
+        let tdValues = Array.from(eEdit.children).map((td: HTMLTableCellElement) => td.textContent);
+
         arrInp.forEach((input, index) => {
             if (index < tdValues.length &&tdValues[index]!=='') { 
                 
@@ -132,7 +135,7 @@ fetch('https://api.github.com/repos/Ilya-Avd/My-works/contents/Test/data.json')
             input.setAttribute("id", "inp")
             })
             // Смена цвета select
-            input.onchange=function(e){
+            input.onchange=function(this: HTMLSelectElement, e){
                 let indexEvent=this.selectedIndex;
                 let option_num=this.options[indexEvent]
                 let colorOp=option_num.style.backgroundColor
@@ -191,7 +194,7 @@ fetch('https://api.github.com/repos/Ilya-Avd/My-works/contents/Test/data.json')
         
         let newInp = document.createElement("input")
         newInp.setAttribute("type", "number")
-        newInp.value=1
+        newInp.value='1'
         newInp.addEventListener('input', function(){  // Обработчик события 
              
              // Получаем значение из поля ввода
@@ -199,14 +202,14 @@ fetch('https://api.github.com/repos/Ilya-Avd/My-works/contents/Test/data.json')
             // Проверяем, не превышает ли введенное значение максимального
             if (value > parsedData.length/10) {
             // Если превышает, устанавливаем значение равным максимальному
-      this.value = parsedData.length/10
+      this.value = (parsedData.length/10).toString()
              };
              if (value < 1) {
                 // Если меньше 1, устанавливаем значение равным 0
-          this.value = 1
+          this.value = '1'
                  };
              
-       numberPage=newInp.value
+       numberPage=Number(newInp.value)
       updateTable()
     })
     document.body.appendChild(inp_div)
