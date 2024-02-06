@@ -123,7 +123,6 @@ fetch('https://api.github.com/repos/Ilya-Avd/My-works/contents/Test/data.json')
         //Обработчик отправки изменений
         buttn.onclick = function () {
             let inputValues = arrInp.map(input => input.value === '' ? input.value = input.style.backgroundColor : input.value);
-            console.log(inputValues);
             parsedData.forEach((tr, index) => {
                 if (tr.Id == eEdit.id) {
                     let key = Object.keys(parsedData[index]).splice(1, 4);
