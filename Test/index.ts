@@ -11,7 +11,7 @@ fetch('https://api.github.com/repos/Ilya-Avd/My-works/contents/Test/data.json')
     
     
     const parsedData: Person[] = JSON.parse(content).map(item => ({
-        'Id': item.name.id,
+        'Id': item.id,
         'First Name': item.name.firstName,
         'Last Name': item.name.lastName,
         'About': item.about,
