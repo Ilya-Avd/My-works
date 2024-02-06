@@ -9,9 +9,17 @@ fetch('https://api.github.com/repos/Ilya-Avd/My-works/contents/Test/data.json')
         [key: string]: string;
     }
     
-    
-    const parsedData: Person[] = JSON.parse(content).map(item => ({
-        'Id': item.name.id,
+    interface Item {
+        id: string;
+        name: {
+            firstName: string;
+            lastName: string;
+        };
+        about: string;
+        eyeColor: string;
+    }
+    const parsedData: Person[] = JSON.parse(content).map((item:Item) => ({
+        'Id': item.id,
         'First Name': item.name.firstName,
         'Last Name': item.name.lastName,
         'About': item.about,
@@ -73,34 +81,32 @@ fetch('https://api.github.com/repos/Ilya-Avd/My-works/contents/Test/data.json')
         return headers;
     }
         //Объект состояний (отсортированна/нет)
-        let objState={
+        let objState:Person={
             "First Name": "not",
             "Last Name": "not",
             "About": 'not',
             'Eye Color': 'not'
         }
         //Сортировка
-        function sortTable(e) {
-        
-            let el = e.target.textContent;
-    
-            if(objState[el]=='not'){
-            objState[el]='y'
-            parsedData.sort((a, b) => a[el].localeCompare(b[el]));
-           
+        function sortTable(e: MouseEvent) {
+            let el = (e.target as HTMLElement).textContent;
+                
+            if (el&&objState[el] == 'not') {
+                objState[el] = 'y';
+                parsedData.sort((a, b) => (a[el] as string).localeCompare(b[el] as string));
+            } else if(el){
+                objState[el] = 'not';
+                parsedData.sort((a, b) => (b[el] as string).localeCompare(a[el] as string));
             }
-            else {
-                objState[el]='not'
-                parsedData.sort((a, b) => b[el].localeCompare(a[el]));           
+            updateTable();
         }
-        updateTable(); 
-        }
+        
               //Форма редактирования 
-      function formEdit(element){
+      function formEdit(element:MouseEvent){
         
         let newDrop=document.getElementById('form_div')//Проверка на дубликат
             if(newDrop){newDrop.remove()}
-        let eEdit=element.currentTarget
+        let eEdit=element.currentTarget! as HTMLElement
         //Объявление контейнер и форму
         let form_div=document.createElement('div')
         form_div.setAttribute("id", "form_div")
@@ -119,12 +125,12 @@ fetch('https://api.github.com/repos/Ilya-Avd/My-works/contents/Test/data.json')
          buttn.textContent = "Save";
         //Заполнение данных формы
         
-        let tdValues = Array.from(eEdit.children).map((td: HTMLTableCellElement) => td.textContent);
+        let tdValues = Array.from(eEdit.children).map((td) => td.textContent?? '');
 
         arrInp.forEach((input, index) => {
             if (index < tdValues.length &&tdValues[index]!=='') { 
                 
-                input.value = tdValues[index];
+            input.value = tdValues[index];
             }
             else {arrColor.forEach((color)=>{
                 let option =document.createElement('option')
@@ -135,14 +141,16 @@ fetch('https://api.github.com/repos/Ilya-Avd/My-works/contents/Test/data.json')
             input.setAttribute("id", "inp")
             })
             // Смена цвета select
-            input.onchange=function(this: HTMLSelectElement, e){
+            
+            input.addEventListener('change', function(this: HTMLSelectElement){
                 let indexEvent=this.selectedIndex;
                 let option_num=this.options[indexEvent]
                 let colorOp=option_num.style.backgroundColor
                 this.style.backgroundColor=colorOp
                 
-            }
-            input.style.backgroundColor=eEdit.children[index].style.backgroundColor
+            })
+            input.style.backgroundColor = (eEdit.children[index] as HTMLElement).style.backgroundColor;
+
         }
             
             newForm.appendChild(input)
@@ -172,7 +180,7 @@ fetch('https://api.github.com/repos/Ilya-Avd/My-works/contents/Test/data.json')
                 
             });
             let dropForm=document.getElementById('form_div')
-            dropForm.remove()
+            dropForm?.remove()
             updateTable()
         }
 
@@ -219,14 +227,14 @@ fetch('https://api.github.com/repos/Ilya-Avd/My-works/contents/Test/data.json')
 
   function updateTable(){
     const element = document.getElementById("taable");
-        element.remove()
+        if(element) element.remove()
       CreateTable()
   }
       // Скрываем колонку по нажатию на кнопку 
      function hideColumn (){
 
         let btn_div=document.createElement('div');   //Создаем контейнер для кнопок
-        
+        btn_div.setAttribute("class", "btn_div"); //Создаем контейнер для кнопок
         // Создаем кнопки
         const headers_btn = Object.keys(parsedData[0]).splice(1,4);
         headers_btn.forEach(heade_Text=>{
